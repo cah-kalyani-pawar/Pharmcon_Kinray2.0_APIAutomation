@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "2f4d1379-e843-4770-9117-83d8d49e2473",
+		"name": "Kinray_PoC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login_Seesion_Accesstoken",
+			"item": [
+				{
+					"name": "Step1:Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b82e893e-0842-49ac-b575-85e3495c29be",
+								"exec": [
+									"console.log(\"check\")",
+									"",
+									"bodyData=JSON.parse(responseBody)",
+									"value=bodyData.sessionToken",
+									"",
+									"",
+									"pm.environment.set(\"SessionTocken\", value)",
+									"console.log(value)",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"{{UserName}}\",\"password\":\"{{Password}}\"}"
+						},
+						"url": {
+							"raw": "https://cardinalpreprdb2b.oktapreview.com{{BaseUrl}}",
+							"protocol": "https",
+							"host": [
+								"cardinalpreprdb2b",
+								"oktapreview",
+								"com{{BaseUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2:Create session id with session token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5981e3bb-557c-44df-9527-a4df52336f33",
+								"exec": [
+									"console.log(\"check\")",
+									"",
+									"bodyData=JSON.parse(responseBody)",
+									"value=bodyData.id",
+									"",
+									"",
+									"pm.environment.set(\"UniqueId\", value);",
+									"console.log(value)",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "SSWS 00oxggVpCVPAuNqh29DEI66IdBIG6rexHlxBRp7GPl"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionToken\": \"{{SessionTocken}}\"\n}"
+						},
+						"url": {
+							"raw": "https://cardinalpreprdb2b.oktapreview.com/api/v1/sessions?additionalFields=cookieToken",
+							"protocol": "https",
+							"host": [
+								"cardinalpreprdb2b",
+								"oktapreview",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "additionalFields",
+									"value": "cookieToken"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3:Create access token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "sfurS7Cen67aX2cVKGGgW2Y0DMeUIOAQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"sessionId\":\"{{UniqueId}}\",\"userName\":\"{{UserName}}\"}"
+						},
+						"url": {
+							"raw": "https://api.qa.cardinalhealth.com/tpl/spswo-auth/v1/auth/session",
+							"protocol": "https",
+							"host": [
+								"api",
+								"qa",
+								"cardinalhealth",
+								"com"
+							],
+							"path": [
+								"tpl",
+								"spswo-auth",
+								"v1",
+								"auth",
+								"session"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "https://api.qa.cardinalhealth.com/tpl/spswo-config/v1/config/products",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "access-token",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJkaHJ1dml0LmthcmRhbmlAY2FyZGluYWxoZWFsdGguY29tIiwiaWF0IjoxNTYyMTQ2NTA1LCJleHBpcmVkQXQiOjE1NjIxNTAxMDUwOTIsInVzZXJOdW0iOjM5MSwidXNlck5hbWUiOiJBQy5UZXN0LlBFMzRAQUMuY29tIiwiY3VzdG9tZXJOdW0iOjQ5Mywib3JnQ29kZSI6IkFDIiwic2Vzc2lvbklkIjoiMTAyLURmb1NOMkhSdTJOMmNNd2pWY2NfQSIsInJvbGVOdW0iOjEsImFwcFR5cGUiOjF9.kaif9Qyaj-Hpb0Z8YQCzIpJO0x7F4HLxB1vZu_wDzJo",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "sfurS7Cen67aX2cVKGGgW2Y0DMeUIOAQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"organisationCde\":\"AC\",\"customerNum\":492,\"customerBillTo\":\"AC1000\",\"searchByNdcNum\":\"010\",\"pageNum\":0,\"pageSize\":8,\"activeFlag\":true,\"warehouseId\":\"CORD100\",\"customerType\":\"TDE\",\"customerShipTo\":\"AC1001\",\"checkProdImgType\":0}"
+				},
+				"url": {
+					"raw": "https://api.qa.cardinalhealth.com/tpl/spswo-config/v1/config/products",
+					"protocol": "https",
+					"host": [
+						"api",
+						"qa",
+						"cardinalhealth",
+						"com"
+					],
+					"path": [
+						"tpl",
+						"spswo-config",
+						"v1",
+						"config",
+						"products"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
