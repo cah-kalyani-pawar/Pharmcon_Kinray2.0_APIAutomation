@@ -70,7 +70,6 @@
 									"bodyData=JSON.parse(responseBody)",
 									"value=bodyData.id",
 									"",
-									"",
 									"pm.environment.set(\"UniqueId\", value);",
 									"console.log(value)",
 									""
@@ -124,6 +123,27 @@
 				},
 				{
 					"name": "Step 3:Create access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1e503e91-06cd-4fdf-b9d0-a4fc70ee6bfa",
+								"exec": [
+									"",
+									"pm.response.headers.all()",
+									"    .filter(headerObj => { return headerObj.key == \"Access-Token\";})",
+									"    .forEach(headerObj => {",
+									"             console.log(headerObj.key +\": \"+headerObj.value)",
+									"    })",
+									"val = postman.getResponseHeader(\"Access-Token\")",
+									"",
+									"pm.environment.set(\"AccessToken\", val);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -180,7 +200,7 @@
 					},
 					{
 						"key": "access-token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJkaHJ1dml0LmthcmRhbmlAY2FyZGluYWxoZWFsdGguY29tIiwiaWF0IjoxNTYyMTQ2NTA1LCJleHBpcmVkQXQiOjE1NjIxNTAxMDUwOTIsInVzZXJOdW0iOjM5MSwidXNlck5hbWUiOiJBQy5UZXN0LlBFMzRAQUMuY29tIiwiY3VzdG9tZXJOdW0iOjQ5Mywib3JnQ29kZSI6IkFDIiwic2Vzc2lvbklkIjoiMTAyLURmb1NOMkhSdTJOMmNNd2pWY2NfQSIsInJvbGVOdW0iOjEsImFwcFR5cGUiOjF9.kaif9Qyaj-Hpb0Z8YQCzIpJO0x7F4HLxB1vZu_wDzJo",
+						"value": "{{AccessToken}}",
 						"type": "text"
 					},
 					{
@@ -191,7 +211,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"organisationCde\":\"AC\",\"customerNum\":492,\"customerBillTo\":\"AC1000\",\"searchByNdcNum\":\"010\",\"pageNum\":0,\"pageSize\":8,\"activeFlag\":true,\"warehouseId\":\"CORD100\",\"customerType\":\"TDE\",\"customerShipTo\":\"AC1001\",\"checkProdImgType\":0}"
+					"raw": "{\"organisationCde\":\"AC\",\"customerNum\":492,\"customerBillTo\":\"AC1000\",\"searchByNdcNum\":\"0\",\"pageNum\":0,\"pageSize\":8,\"activeFlag\":true,\"warehouseId\":\"CORD100\",\"customerType\":\"TDE\",\"customerShipTo\":\"AC1001\",\"checkProdImgType\":0}"
 				},
 				"url": {
 					"raw": "https://api.qa.cardinalhealth.com/tpl/spswo-config/v1/config/products",
