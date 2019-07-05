@@ -16,15 +16,21 @@
 							"script": {
 								"id": "b82e893e-0842-49ac-b575-85e3495c29be",
 								"exec": [
-									"console.log(\"check\")",
-									"",
-									"bodyData=JSON.parse(responseBody)",
-									"value=bodyData.sessionToken",
-									"",
-									"",
-									"pm.environment.set(\"SessionTocken\", value)",
-									"console.log(value)",
-									"",
+									"if (pm.response.code == 200)",
+									"{",
+									"    postman.setNextRequest(\"Step 2:Create session id with session token\");",
+									"    bodyData=JSON.parse(responseBody)",
+									"    value=bodyData.sessionToken",
+									"    pm.environment.set(\"SessionTocken\", value)",
+									"    console.log(value)",
+									"    console.log(\"Step 1 Executed Successfully\")",
+									"    postman.setNextRequest(\"Step 2:Create session id with session token\")",
+									"}",
+									"else",
+									"{",
+									"    postman.setNextRequest(null);",
+									"    console.error(\"collection failed at step 1\")",
+									"}",
 									""
 								],
 								"type": "text/javascript"
@@ -65,13 +71,22 @@
 							"script": {
 								"id": "5981e3bb-557c-44df-9527-a4df52336f33",
 								"exec": [
-									"console.log(\"check\")",
-									"",
-									"bodyData=JSON.parse(responseBody)",
-									"value=bodyData.id",
-									"",
-									"pm.environment.set(\"UniqueId\", value);",
-									"console.log(value)",
+									"if(pm.response.code == 200)",
+									"{",
+									"   ",
+									"    bodyData=JSON.parse(responseBody);",
+									"    value=bodyData.id",
+									"    pm.environment.set(\"UniqueId\", value);",
+									"    console.log(value);",
+									"    console.log(\"Step2 Executed Successfully\");",
+									"    postman.setNextRequest(\"Step 3:Create access token\");",
+									"    ",
+									"}",
+									"else",
+									"{",
+									"    console.log(\"Collection Failed at step 2\");",
+									"    postman.setNextRequest(null);",
+									"}",
 									""
 								],
 								"type": "text/javascript"
@@ -129,15 +144,25 @@
 							"script": {
 								"id": "1e503e91-06cd-4fdf-b9d0-a4fc70ee6bfa",
 								"exec": [
-									"",
-									"pm.response.headers.all()",
+									"if(pm.response.code == 200)",
+									"{",
+									"    pm.response.headers.all()",
 									"    .filter(headerObj => { return headerObj.key == \"Access-Token\";})",
 									"    .forEach(headerObj => {",
 									"             console.log(headerObj.key +\": \"+headerObj.value)",
 									"    })",
-									"val = postman.getResponseHeader(\"Access-Token\")",
 									"",
-									"pm.environment.set(\"AccessToken\", val);",
+									"    val = postman.getResponseHeader(\"Access-Token\")",
+									"    pm.environment.set(\"AccessToken\", val);",
+									"    console.log(\"Access-token : \"+val);",
+									"    console.log(\"Step 3 Successfully Executed\");",
+									"    postman.setNextRequest(\"Script1\");",
+									"}",
+									"else",
+									"{",
+									"    console.error(\"collection failed at step no 3\")",
+									"    postman.setNextConsole(null)",
+									"}",
 									""
 								],
 								"type": "text/javascript"
@@ -186,7 +211,33 @@
 			]
 		},
 		{
-			"name": "https://api.qa.cardinalhealth.com/tpl/spswo-config/v1/config/products",
+			"name": "Script1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b638f5ab-c6d9-4dd2-ba48-d1f806563617",
+						"exec": [
+							"pm.test(\"Verify Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"bodyData=JSON.parse(responseBody)",
+							"value=bodyData.content[0].organisationId",
+							"",
+							"pm.test(\"Verify OrdanizationId\", function()",
+							"{",
+							"pm.expect(value).to.equal(data.OrganizationId)",
+							"    ",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "noauth"
